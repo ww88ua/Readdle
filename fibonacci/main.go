@@ -3,6 +3,7 @@ package main
 import (
   "time"
   "fmt"
+  "encoding/json"
 )
 
 var n1,n2,n3 int = 0,1,0
@@ -22,15 +23,9 @@ func getFibonacci(count int) []int  {
 
 }
 
-type Error struct {
-  CurrentNumber int
-  Position int
-}
-
-
 
 func main() {
-  count := 100
+  count :=  50
   var fibonacciArray = getFibonacci(count)
 
 
@@ -58,8 +53,9 @@ func main() {
      }()
      select {
        case <-timeout:
-         error := Error{fibonacciArray[i], i}
-         fmt.Println(error)
+         mapD := map[string]int{"currentNumber": fibonacciArray[i], "position": i}
+         json, _ := json.Marshal(mapD)
+         fmt.Println(string(json))
          errorsCount++
 
          continue OutLoop
@@ -69,10 +65,11 @@ func main() {
         answersCount++;
         continue OutLoop
        } else {
-         error := Error{fibonacciArray[i], i}
-         fmt.Println(error)
-        errorsCount++;
-        continue OutLoop
+         mapD := map[string]int{"currentNumber": fibonacciArray[i], "position": i}
+         json, _ := json.Marshal(mapD)
+         fmt.Println(string(json))
+         errorsCount++;
+         continue OutLoop
        }
        time.Sleep(1*time.Second)
      }
